@@ -3,29 +3,27 @@ const ERROR = document.getElementById('error');
 const FLU = document.getElementById('flu');
 const MAN = document.getElementById('man');
 
-function calcFlujo(peso){
-    let resto = peso;
+function calcFlujo(peso) {
     let flujo = 0;
-        if (resto>=20){
-            let aux = resto-20;
-            flujo += aux*1;    
-            resto -= aux;
-        } 
-        if (resto>=10){
-            let aux = resto-10;
-            flujo += aux*2;
-            resto -= aux;
-        }
-        flujo += resto*4;
-        return flujo;
+
+    if (peso >= 0 && peso <= 10) {
+        flujo = peso * 100 / 24; // Divide por 24 para obtener la tasa por hora.
+    } else if (peso > 10 && peso <= 20) {
+        flujo = (1000 + (peso - 10) * 50) / 24; // Divide por 24 para obtener la tasa por hora.
+    } else if (peso > 20) {
+        flujo = (1000 + 500 + (peso - 20) * 20) / 24; // Divide por 24 para obtener la tasa por hora.
+    }
+
+    return flujo;
 }
 
 CALCULAR.addEventListener('click', () => {
-    const DATO = document.getElementById('peso').value;
-    if (DATO > 0){
-        ERROR.style.display = 'none'
+    const DATO = parseFloat(document.getElementById('peso').value);
+    
+    if (!isNaN(DATO) && DATO >= 0) {
+        ERROR.style.display = 'none';
         let flujo = calcFlujo(DATO);
-        let mantenimiento = flujo*1.5;
+        let mantenimiento = flujo * 1.5;
         FLU.innerHTML = flujo + ' cc/hr';
         MAN.innerHTML = 'm+m/2 ' + mantenimiento + ' cc/hr';
         FLU.style.display = 'block';
@@ -35,4 +33,4 @@ CALCULAR.addEventListener('click', () => {
         FLU.style.display = 'none';
         MAN.style.display = 'none';
     }
-})
+});
